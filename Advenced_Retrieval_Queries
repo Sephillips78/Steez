@@ -1,6 +1,4 @@
--- =========================
 -- Advanced Retrieval Queries
--- =========================
 
 -- Query 1: Find all orders with user email and total amount
 SELECT o.order_id, u.email, o.total_amount, o.created_at
