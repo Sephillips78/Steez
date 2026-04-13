@@ -61,7 +61,11 @@ export default function CrudPage() {
     if (!email) return showMsg('Email is required.', 'error')
     const { error } = await supabase
       .from('users')
-      .insert({ email, role })
+      .insert({ 
+        user_id: crypto.randomUUID(),
+        email, 
+        role 
+      })
     if (error) {
       if (error.code === '23505')
         showMsg('✗ An account with this email already exists. (UNIQUE constraint violation)', 'error')
@@ -81,7 +85,12 @@ export default function CrudPage() {
       return showMsg('✗ Price must be a positive value. (CHECK constraint)', 'error')
     const { error } = await supabase
       .from('product')
-      .insert({ name: productName, price, category_id: parseInt(categoryId) })
+      .insert({ 
+        product_id: Math.floor(Math.random() * 100000),
+        name: productName, 
+        price, 
+        category_id: parseInt(categoryId) 
+      })
     if (error) {
       if (error.code === '23503')
         showMsg('✗ Invalid category. (FK constraint violation)', 'error')
@@ -115,7 +124,11 @@ export default function CrudPage() {
 
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
-      .insert({ user_id: userData.user_id, total_amount: total })
+      .insert({ 
+        order_id: Math.floor(Math.random() * 100000),
+        user_id: userData.user_id, 
+        total_amount: total 
+      })
       .select()
       .single()
 
@@ -123,20 +136,28 @@ export default function CrudPage() {
 
     const { error: itemError } = await supabase
       .from('order_items')
-      .insert({ order_id: orderData.order_id, product_id: parseInt(orderProductId), quantity: qty })
+      .insert({ 
+        order_id: orderData.order_id, 
+        product_id: parseInt(orderProductId), 
+        quantity: qty 
+      })
 
     if (itemError) return showMsg(`✗ Error adding item: ${itemError.message}`, 'error')
 
     showMsg(`✓ Order placed successfully! Total: $${total.toFixed(2)}`, 'success')
   }
 
-  // ── 4. ADD TO WISHLIST ─────────────────────────────────────
+ // ── 4. ADD TO WISHLIST ─────────────────────────────────────
   async function addToWishlist() {
     if (!wishlistUserId || !wishlistProductId)
       return showMsg('User ID and Product ID are required.', 'error')
     const { error } = await supabase
       .from('wishlist')
-      .insert({ user_id: wishlistUserId, product_id: parseInt(wishlistProductId) })
+      .insert({ 
+        wishlist_id: Math.floor(Math.random() * 100000),
+        user_id: wishlistUserId, 
+        product_id: parseInt(wishlistProductId) 
+      })
     if (error) {
       if (error.code === '23505')
         showMsg('✗ This item is already in the wishlist. (UNIQUE constraint violation)', 'error')
